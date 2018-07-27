@@ -1,0 +1,83 @@
+def applicationProperties = new Properties()
+applicationProperties.load(new FileReader("$projectDir//src/main/resources/application.properties"))
+
+buildscript {
+	ext {
+		springBootVersion = '1.5.10.RELEASE'
+	}
+	repositories {
+		maven {
+			url "https://plugins.gradle.org/m2/"
+		}
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath('org.liquibase:liquibase-gradle-plugin:1.2.0')
+		classpath('mysql:mysql-connector-java:5.1.13')
+		classpath('org.yaml:snakeyaml:1.17')
+		classpath 'gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.13.0'
+	}
+}
+
+apply plugin: 'groovy'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'liquibase'
+apply plugin: 'com.palantir.docker'
+
+docker {
+	dependsOn build
+	name "${repo}:${version}"
+	files jar.archivePath
+	buildArgs(['JAR_FILE': "${jar.archiveName}"])
+}
+
+liquibase {
+	activities {
+		main {
+			changeLogFile "$projectDir/src/main/resources/db/changelog/db.changelog-master.yaml"
+			url applicationProperties['spring.datasource.url']
+			username applicationProperties['spring.datasource.username']
+			password applicationProperties['spring.datasource.password']
+		}
+	}
+}
+
+group = 'net.dlcruz'
+sourceCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+}
+
+
+dependencies {
+	compile('org.springframework.boot:spring-boot-starter')
+	compile('org.springframework.boot:spring-boot-starter-web')
+	compile("org.springframework.boot:spring-boot-starter-thymeleaf")
+	compile('org.springframework.boot:spring-boot-starter-security')
+	compile('org.springframework.boot:spring-boot-starter-data-jpa')
+	compile('org.codehaus.groovy:groovy')
+
+	// Web jars
+	compile('org.webjars:bootstrap:4.0.0-2')
+	compile('org.webjars:font-awesome:5.0.8')
+
+	// Security
+	compile('org.springframework.security:spring-security-jwt:1.0.7.RELEASE')
+	compile('org.springframework.security.oauth:spring-security-oauth2:2.1.0.RELEASE')
+
+	compile('org.liquibase:liquibase-core')
+	runtime('mysql:mysql-connector-java')
+
+	// Test dependencies
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+	testCompile('org.spockframework:spock-core:1.1-groovy-2.4')
+	testCompile('org.spockframework:spock-spring:1.1-groovy-2.4')
+	testRuntime('cglib:cglib-nodep:3.2.4')
+
+	// Development
+	compile("org.springframework.boot:spring-boot-devtools")
+}

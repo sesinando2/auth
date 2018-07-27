@@ -1,0 +1,15 @@
+version: "3"
+services:
+  web:
+    image: hub.docker.com/sesinando2/auth:0.0.1-SNAPSHOT
+    deploy:
+      restart_policy:
+        condition: on-failure
+    ports:
+      - "10080:10080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://host.docker.internal:3306/auth
+    networks:
+      - webnet
+networks:
+  webnet:

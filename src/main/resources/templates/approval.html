@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>OAuth Approval</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="/webjars/bootstrap/4.0.0-2/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/css/signin.css" rel="stylesheet" />
+</head>
+<body class="text-center">
+<form id="confirmationForm" class="form-signin" name="confirmationForm" th:action="@{/oauth/authorize}" method="post">
+    <input name="user_oauth_approval" value="true" type="hidden"/>
+
+    <img class="mb-4" th:src="@{/images/bootstrap-solid.svg}" alt="" width="72" height="72" />
+
+    <h1 class="h3 mb-3 font-weight-normal">OAuth Approval</h1>
+    <p>Do you authorize '<span th:text="${param.client_id[0]}"/>' to access your protected resources?</p>
+
+    <input class="btn btn-lg btn-primary btn-block" name="Authorize" value="Authorize" type="submit"/>
+
+    <p class="mt-5 mb-3 text-muted">© 2017-2018</p>
+</form>
+</body>
+</html>
