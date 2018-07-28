@@ -1,6 +1,5 @@
-package net.dlcruz.auth
+package net.dlcruz.auth.service
 
-import net.dlcruz.auth.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails

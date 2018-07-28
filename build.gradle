@@ -72,6 +72,9 @@ dependencies {
 	compile('org.liquibase:liquibase-core')
 	runtime('mysql:mysql-connector-java')
 
+	// Facebook
+	compile group: 'org.springframework.social', name: 'spring-social-facebook', version: '2.0.3.RELEASE'
+
 	// Test dependencies
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('org.spockframework:spock-core:1.1-groovy-2.4')

@@ -1,6 +1,5 @@
-package net.dlcruz.auth
+package net.dlcruz.auth.service
 
-import net.dlcruz.auth.service.ClientService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.oauth2.provider.ClientDetails

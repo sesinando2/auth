@@ -1,8 +1,8 @@
 package net.dlcruz.auth.config
 
-import net.dlcruz.auth.AuthClientDetailsService
+import net.dlcruz.auth.service.AuthClientDetailsService
 import net.dlcruz.auth.AuthTokenEnhancer
-import net.dlcruz.auth.AuthUserDetailsService
+import net.dlcruz.auth.service.AuthUserDetailsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.web.servlet.FilterRegistrationBean

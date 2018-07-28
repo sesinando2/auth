@@ -1,6 +1,5 @@
 package net.dlcruz.auth
 
-import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken
 import org.springframework.security.oauth2.common.OAuth2AccessToken
 import org.springframework.security.oauth2.provider.OAuth2Authentication
@@ -10,8 +9,7 @@ class AuthTokenEnhancer implements TokenEnhancer {
 
     @Override
     OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
-        def userDetails = authentication.principal as UserDetails
-        ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation([authorities: userDetails.authorities*.authority])
+        ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation([authorities: authentication.authorities*.authority])
         accessToken
     }
 }

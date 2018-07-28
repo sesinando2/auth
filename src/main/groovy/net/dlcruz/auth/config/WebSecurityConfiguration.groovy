@@ -1,6 +1,8 @@
 package net.dlcruz.auth.config
 
-import net.dlcruz.auth.AuthUserDetailsService
+import net.dlcruz.auth.service.AuthUserDetailsService
+import net.dlcruz.auth.social.FacebookConnectionSignup
+import net.dlcruz.auth.social.FacebookSignInAdapter
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
@@ -17,6 +19,11 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore
+import org.springframework.social.connect.ConnectionFactoryLocator
+import org.springframework.social.connect.UsersConnectionRepository
+import org.springframework.social.connect.mem.InMemoryUsersConnectionRepository
+import org.springframework.social.connect.web.ProviderSignInController
+import org.springframework.social.connect.web.ProviderSignInUtils
 
 @Configuration
 @EnableWebSecurity
@@ -31,6 +38,15 @@ class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private PasswordEncoder passwordEncoder
+
+    @Autowired
+    private ConnectionFactoryLocator connectionFactoryLocator
+
+    @Autowired
+    private UsersConnectionRepository usersConnectionRepository
+
+    @Autowired
+    private FacebookConnectionSignup facebookConnectionSignup
 
     @Bean
     JwtAccessTokenConverter accessTokenConverter() {
@@ -77,12 +93,28 @@ class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .disable()
 
             .authorizeRequests()
+                .antMatchers('/login/**', '/signin/**', '/signup/**')
+                .permitAll()
+
                 .anyRequest()
                 .authenticated()
     }
 
     @Override
     void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers('/**/**.css', '/**/**.js', '/webjars/**', '/images/*/**')
+        web
+            .ignoring().antMatchers('/**/**.css', '/**/**.js', '/webjars/**', '/images/*/**')
+    }
+
+    @Bean
+    ProviderSignInController providerSignInController() {
+        ((InMemoryUsersConnectionRepository) usersConnectionRepository).setConnectionSignUp(facebookConnectionSignup)
+
+        return new ProviderSignInController(connectionFactoryLocator, usersConnectionRepository, new FacebookSignInAdapter())
+    }
+
+    @Bean
+    ProviderSignInUtils providerSignInUtils() {
+        new ProviderSignInUtils(connectionFactoryLocator, usersConnectionRepository)
     }
 }
