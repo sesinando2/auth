@@ -1,7 +1,7 @@
 version: "3"
 services:
   auth:
-    image: hub.docker.com/sesinando2/auth:0.0.1-SNAPSHOT
+    image: sesinando2/auth:0.0.1-SNAPSHOT
     deploy:
       restart_policy:
         condition: on-failure
