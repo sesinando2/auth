@@ -13,7 +13,10 @@ buildscript {
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath("org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}")
 		classpath('org.liquibase:liquibase-gradle-plugin:1.2.0')
+		classpath('org.liquibase:liquibase-core')
+		classpath('org.liquibase.ext:liquibase-hibernate5:3.6')
 		classpath('mysql:mysql-connector-java:5.1.13')
 		classpath('org.yaml:snakeyaml:1.17')
 		classpath('gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.13.0')
@@ -37,10 +40,12 @@ docker {
 liquibase {
 	activities {
 		main {
-			changeLogFile "$projectDir/src/main/resources/db/changelog/db.changelog-master.yaml"
+			classpath "$projectDir/src/main"
+			changeLogFile "$projectDir/src/main/resources/db/changelog/db.changelog-master.groovy"
 			url applicationProperties['spring.datasource.url']
 			username applicationProperties['spring.datasource.username']
 			password applicationProperties['spring.datasource.password']
+			referenceUrl "hibernate:spring:net.dlcruz.auth.model?dialect=${applicationProperties['spring.jpa.properties.hibernate.dialect']}"
 		}
 	}
 }
@@ -76,7 +81,7 @@ dependencies {
 	compile('org.springframework.social:spring-social-facebook:2.0.3.RELEASE')
 
 	// Google
-	compile ('org.springframework.social:spring-social-google:1.0.0')
+	compile ('org.springframework.social:spring-social-google:1.0.0.RELEASE')
 
 	// Test dependencies
 	testCompile('org.springframework.boot:spring-boot-starter-test')
@@ -86,4 +91,7 @@ dependencies {
 
 	// Development
 	compile("org.springframework.boot:spring-boot-devtools")
+
+	// Liquibase Groovy DSL
+	compile('org.liquibase:liquibase-groovy-dsl:1.2.2')
 }
