@@ -29,7 +29,8 @@ class AuthClientDetailsService implements ClientDetailsService {
             authorizedGrantTypes: client.authorizedGrantTypes*.toString(),
             scope: client.scope*.toString(),
             authorities: client.roles.collect { new SimpleGrantedAuthority(it.name()) },
-            registeredRedirectUris: client.registeredRedirectUris*.toString()
+            registeredRedirectUris: client.registeredRedirectUris*.toString(),
+            autoApproveScopes: client.scope*.toString()
         )
     }
 }
