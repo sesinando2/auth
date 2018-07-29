@@ -4,6 +4,7 @@
     <title>Login</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link href="webjars/bootstrap/4.0.0-2/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="webjars/font-awesome/5.0.8/web-fonts-with-css/css/fontawesome-all.min.css" rel="stylesheet" />
     <link href="css/signin.css" rel="stylesheet" />
 </head>
 <body class="text-center">
@@ -33,11 +34,15 @@
 
         <form action="/signin/facebook" method="POST">
             <input type="hidden" name="scope" value="public_profile,email" />
-            <input class="btn btn-lg btn-primary btn-block mt-2" type="submit" value="Login using Facebook"/>
+            <button class="btn btn-lg btn-primary btn-block mt-2" type="submit">
+                <i class="fab fa-facebook"></i> Login using Facebook
+            </button>
         </form>
 
         <form action="/signin/google" method="POST">
-            <input class="btn btn-lg btn-primary btn-block mt-2" type="submit" value="Login using Google"/>
+            <button class="btn btn-lg btn-primary btn-block mt-2" type="submit">
+                <i class="fab fa-google"></i> Login using Google
+            </button>
         </form>
 
         <p class="mt-5 mb-3 text-muted">© 2017-2018</p>
