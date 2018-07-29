@@ -1,3 +1,3 @@
 databaseChangeLog {
-  include file: 'db/changelog/initial.groovy'
+  include file: 'initial.groovy', relativeToChangelogFile: true
 }
