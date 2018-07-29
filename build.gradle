@@ -73,7 +73,10 @@ dependencies {
 	runtime('mysql:mysql-connector-java')
 
 	// Facebook
-	compile group: 'org.springframework.social', name: 'spring-social-facebook', version: '2.0.3.RELEASE'
+	compile('org.springframework.social:spring-social-facebook:2.0.3.RELEASE')
+
+	// Google
+	compile ('org.springframework.social:spring-social-google:1.0.0')
 
 	// Test dependencies
 	testCompile('org.springframework.boot:spring-boot-starter-test')
