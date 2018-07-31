@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
         - name: auth
-          image: gcr.io/alert-synapse-211723/auth:0.0.1-SNAPSHOT
+          image: gcr.io/alert-synapse-211723/auth:0.0.1
           ports:
             - containerPort: 10080
           env:
@@ -35,7 +35,7 @@ spec:
         - name: cloudsql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:1.11
           command: ["/cloud_sql_proxy",
-                    "-instances=alert-synapse-211723:australia-southeast1:mysql=tcp:3306",
+                    "-instances=alert-synapse-211723:australia-southeast1:mysql-db=tcp:3306",
                     "-credential_file=/secrets/cloudsql/credentials.json"]
           volumeMounts:
             - name: cloudsql-instance-credentials
