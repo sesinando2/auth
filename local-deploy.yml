@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: auth
+  name: auth
+  namespace: default
+spec:
+  ports:
+  - port: 10080
+    protocol: TCP
+    targetPort: 10080
+  selector:
+    app: auth
+  type: LoadBalancer
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: auth
+  labels:
+    app: auth
+spec:
+  template:
+    metadata:
+      labels:
+        app: auth
+    spec:
+      containers:
+        - name: auth
+          image: gcr.io/alert-synapse-211723/auth:0.0.1
+          ports:
+            - containerPort: 10080
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mysql://host.docker.internal:3306/auth
