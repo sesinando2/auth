@@ -32,6 +32,9 @@ class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private PasswordEncoder passwordEncoder
 
+    @Autowired
+    private AuthLogoutSuccessHandler logoutSuccessHandler
+
     @Bean
     JwtAccessTokenConverter accessTokenConverter() {
         new JwtAccessTokenConverter(signingKey: signingKey)
@@ -70,6 +73,7 @@ class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
 
             .logout()
+                .logoutSuccessHandler(logoutSuccessHandler)
                 .permitAll()
                 .and()
 
