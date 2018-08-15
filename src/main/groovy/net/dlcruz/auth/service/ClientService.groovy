@@ -20,7 +20,14 @@ class ClientService {
     }
 
     Client save(Client client) {
-        client.secret = passwordEncoder.encode(client.secret)
         clientRepository.save(client)
+    }
+
+    List<Client> list() {
+        clientRepository.findAll()
+    }
+
+    void delete(Long id) {
+        clientRepository.delete(id)
     }
 }

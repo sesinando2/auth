@@ -2,29 +2,22 @@ package net.dlcruz.auth.config
 
 import net.dlcruz.auth.service.AuthUserDetailsService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.autoconfigure.security.SecurityProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Primary
+import org.springframework.core.annotation.Order
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.security.oauth2.provider.token.DefaultTokenServices
-import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter
-import org.springframework.security.oauth2.provider.token.store.JwtTokenStore
 
+@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity
 class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
-
-    @Value('${security.signing-key}')
-    private String signingKey
 
     @Autowired
     private AuthUserDetailsService userDetailsService
@@ -34,22 +27,6 @@ class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private AuthLogoutSuccessHandler logoutSuccessHandler
-
-    @Bean
-    JwtAccessTokenConverter accessTokenConverter() {
-        new JwtAccessTokenConverter(signingKey: signingKey)
-    }
-
-    @Bean
-    JwtTokenStore tokenStore() {
-        new JwtTokenStore(accessTokenConverter())
-    }
-
-    @Bean
-    @Primary
-    DefaultTokenServices tokenServices() {
-        new DefaultTokenServices(tokenStore: tokenStore(), supportRefreshToken: true)
-    }
 
     @Bean
     @Override
@@ -66,26 +43,22 @@ class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-            .formLogin()
-                .loginPage('/login')
-                .defaultSuccessUrl('/')
-                .permitAll()
+            .authorizeRequests()
+                .antMatchers('/login/**', '/signin/**', '/signup/**', '/actuators/**', '/api-docs/**').permitAll()
+                .anyRequest().authenticated()
                 .and()
 
-            .logout()
+            .formLogin()
+                .loginPage('/login').permitAll()
+                .defaultSuccessUrl('/')
+                .and()
+
+                .logout().permitAll()
                 .logoutSuccessHandler(logoutSuccessHandler)
-                .permitAll()
                 .and()
 
             .csrf()
                 .disable()
-
-            .authorizeRequests()
-                .antMatchers('/login/**', '/signin/**', '/signup/**')
-                .permitAll()
-
-                .anyRequest()
-                .authenticated()
     }
 
     @Override

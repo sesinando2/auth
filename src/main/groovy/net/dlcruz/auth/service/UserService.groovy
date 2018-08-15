@@ -23,4 +23,12 @@ class UserService {
         user.password = passwordEncoder.encode(user.password)
         userRepository.save(user)
     }
+
+    List<User> list() {
+        userRepository.findAll()
+    }
+
+    void delete(Long id) {
+        userRepository.delete(id)
+    }
 }
