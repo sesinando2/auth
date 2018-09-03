@@ -1,6 +1,6 @@
 package net.dlcruz.auth
 
-import net.dlcruz.auth.service.BootstrapService
+import net.dlcruz.auth.service.implementation.BootstrapService
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.Bean

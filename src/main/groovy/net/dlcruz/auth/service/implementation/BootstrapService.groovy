@@ -1,4 +1,4 @@
-package net.dlcruz.auth.service
+package net.dlcruz.auth.service.implementation
 
 import net.dlcruz.auth.model.*
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,7 +15,7 @@ class BootstrapService {
     private UserService userService
 
     @Autowired
-    private ClientService clientService
+    private ClientServiceImpl clientService
 
     void initialiseDefaults() {
         initialiseDefaultUsers()

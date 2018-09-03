@@ -1,7 +1,7 @@
 package net.dlcruz.auth.api.controller
 
 import net.dlcruz.auth.model.User
-import net.dlcruz.auth.service.UserService
+import net.dlcruz.auth.service.implementation.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping

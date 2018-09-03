@@ -6,7 +6,7 @@ import javax.persistence.*
 import javax.validation.constraints.NotNull
 
 @Entity
-class User {
+class User implements JpaEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -1,6 +1,10 @@
 def applicationProperties = new Properties()
 applicationProperties.load(new FileReader("$projectDir//src/main/resources/application.properties"))
 
+configurations {
+	liquibase
+}
+
 buildscript {
 	ext {
 		springBootVersion = '1.5.10.RELEASE'
@@ -13,12 +17,6 @@ buildscript {
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-		classpath("org.springframework.boot:spring-boot-starter-data-jpa:${springBootVersion}")
-		classpath('org.liquibase:liquibase-gradle-plugin:1.2.0')
-		classpath('org.liquibase:liquibase-core')
-		classpath('org.liquibase.ext:liquibase-hibernate5:3.6')
-		classpath('mysql:mysql-connector-java:5.1.13')
-		classpath('org.yaml:snakeyaml:1.17')
 		classpath('gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.13.0')
 	}
 }
@@ -27,7 +25,6 @@ apply plugin: 'groovy'
 apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
-apply plugin: 'liquibase'
 apply plugin: 'com.palantir.docker'
 
 docker {
@@ -35,19 +32,6 @@ docker {
 	name project.name
 	files jar.archivePath
 	buildArgs(['JAR_FILE': "${jar.archiveName}"])
-}
-
-liquibase {
-	activities {
-		main {
-			classpath "$projectDir/src/main"
-			changeLogFile "$projectDir/src/main/resources/db/changelog/db.changelog-master.groovy"
-			url applicationProperties['spring.datasource.url']
-			username applicationProperties['spring.datasource.username']
-			password applicationProperties['spring.datasource.password']
-			referenceUrl "hibernate:spring:net.dlcruz.auth.model?dialect=${applicationProperties['spring.jpa.properties.hibernate.dialect']}"
-		}
-	}
 }
 
 group = 'net.dlcruz'
@@ -83,15 +67,51 @@ dependencies {
 	// Google
 	compile ('org.springframework.social:spring-social-google:1.0.0.RELEASE')
 
+	// Development
+	compile("org.springframework.boot:spring-boot-devtools")
+
+	// Liquibase Groovy DSL
+	compile('org.liquibase:liquibase-groovy-dsl:1.2.2')
+
 	// Test dependencies
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('org.spockframework:spock-core:1.1-groovy-2.4')
 	testCompile('org.spockframework:spock-spring:1.1-groovy-2.4')
 	testRuntime('cglib:cglib-nodep:3.2.4')
 
-	// Development
-	compile("org.springframework.boot:spring-boot-devtools")
+	// Liquibase
+	liquibase('org.liquibase:liquibase-core')
+	liquibase('org.liquibase:liquibase-groovy-dsl:2.0.0')
+	liquibase('mysql:mysql-connector-java:5.1.13')
+	liquibase('org.liquibase.ext:liquibase-hibernate5:3.6')
+	liquibase('org.springframework.boot:spring-boot-starter-data-jpa')
+}
 
-	// Liquibase Groovy DSL
-	compile('org.liquibase:liquibase-groovy-dsl:1.2.2')
+task diffChangeLog(type: JavaExec) {
+	group = "liquibase"
+
+	classpath sourceSets.main.runtimeClasspath
+	classpath configurations.liquibase
+	main = "liquibase.integration.commandline.Main"
+
+	args "--changeLogFile=" + "$projectDir/src/main/resources/db/changelog/${System.currentTimeMillis()}-diff.groovy"
+	args "--referenceUrl=" + "hibernate:spring:net.dlcruz.auth.model?dialect=org.hibernate.dialect.MySQL5Dialect&hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy"
+	args "--username=" + applicationProperties['spring.datasource.username']
+	args "--password=" + applicationProperties['spring.datasource.password']
+	args "--url=" + applicationProperties['spring.datasource.url']
+	args "--referenceDriver=liquibase.ext.hibernate.database.connection.HibernateDriver"
+	args "diffChangeLog"
+}
+
+task generateChangelog(type: JavaExec) {
+	group = "liquibase"
+
+	classpath sourceSets.main.runtimeClasspath
+	classpath configurations.liquibase
+	main = "liquibase.integration.commandline.Main"
+
+	args "--changeLogFile=" + "$projectDir/src/main/resources/db/changelog/db.changelog-master.groovy"
+	args "--url=" + "hibernate:spring:net.dlcruz.auth.model?dialect=org.hibernate.dialect.MySQL5Dialect&hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy"
+	args "--driver=liquibase.ext.hibernate.database.connection.HibernateDriver"
+	args "generateChangelog"
 }

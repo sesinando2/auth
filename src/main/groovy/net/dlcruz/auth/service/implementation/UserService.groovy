@@ -1,4 +1,4 @@
-package net.dlcruz.auth.service
+package net.dlcruz.auth.service.implementation
 
 import net.dlcruz.auth.model.User
 import net.dlcruz.auth.repository.UserRepository

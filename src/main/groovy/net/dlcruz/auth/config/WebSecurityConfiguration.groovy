@@ -1,6 +1,6 @@
 package net.dlcruz.auth.config
 
-import net.dlcruz.auth.service.AuthUserDetailsService
+import net.dlcruz.auth.service.implementation.AuthUserDetailsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.security.SecurityProperties
 import org.springframework.context.annotation.Bean

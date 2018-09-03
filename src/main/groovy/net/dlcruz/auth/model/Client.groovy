@@ -4,9 +4,12 @@ import javax.persistence.*
 import javax.validation.constraints.NotNull
 
 @Entity
-class Client {
+class Client implements JpaEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    Long id
+
     @NotNull
     @Column(unique = true)
     String clientId

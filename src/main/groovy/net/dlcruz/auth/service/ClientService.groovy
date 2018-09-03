@@ -1,33 +1,8 @@
 package net.dlcruz.auth.service
 
 import net.dlcruz.auth.model.Client
-import net.dlcruz.auth.repository.ClientRepository
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.stereotype.Service
 
-@Service
-class ClientService {
+interface ClientService extends EntityService<Client, Long> {
 
-    @Autowired
-    private ClientRepository clientRepository
-
-    @Autowired
-    private PasswordEncoder passwordEncoder
-
-    Client findByClientId(String clientId) {
-        clientRepository.findByClientId(clientId)
-    }
-
-    Client save(Client client) {
-        clientRepository.save(client)
-    }
-
-    List<Client> list() {
-        clientRepository.findAll()
-    }
-
-    void delete(Long id) {
-        clientRepository.delete(id)
-    }
+    Client findByClientId(String clientId)
 }
