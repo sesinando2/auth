@@ -51,8 +51,8 @@ spec:
         - name: cloudsql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:1.11
           command: ["/cloud_sql_proxy",
-                    "-instances=alert-synapse-211723:australia-southeast1:mysql-db=tcp:3306",
-                    "-credential_file=/secrets/cloudsql/credentials.json"]
+                    "-instances=alert-synapse-211723:australia-southeast1:mysql-instance=tcp:3306",
+                    "-credential_file=/secrets/cloudsql/alert-synapse-211723-bc719d7724f8.json"]
           volumeMounts:
             - name: cloudsql-instance-credentials
               mountPath: /secrets/cloudsql

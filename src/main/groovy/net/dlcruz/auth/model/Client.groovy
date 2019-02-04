@@ -30,8 +30,7 @@ class Client implements JpaEntity {
     Set<Scope> scope
 
     @ElementCollection
-    @Enumerated(EnumType.STRING)
-    Set<Role> roles
+    Set<String> roles
 
     @ElementCollection
     Set<String> registeredRedirectUris

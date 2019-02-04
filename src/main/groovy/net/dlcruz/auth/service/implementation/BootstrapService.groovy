@@ -37,7 +37,7 @@ class BootstrapService {
                 secret: defaultPassword,
                 authorizedGrantTypes: GrantType.values(),
                 scope: Scope.values(),
-                roles: Role.values())
+                roles: ['ADMIN', 'USER'])
 
         createClient(authClient)
 
@@ -47,7 +47,7 @@ class BootstrapService {
                 secret: defaultPassword,
                 authorizedGrantTypes: GrantType.values(),
                 scope: Scope.values(),
-                roles: Role.values(),
+                roles: ['ADMIN', 'USER'],
                 registeredRedirectUris: ['http://localhost:4200'])
 
         createClient(financeClient)
@@ -58,7 +58,7 @@ class BootstrapService {
                 secret: defaultPassword,
                 authorizedGrantTypes: GrantType.values(),
                 scope: Scope.values(),
-                roles: Role.values(),
+                roles: ['ADMIN', 'USER'],
                 registeredRedirectUris: ['http://localhost:4200'])
 
         createClient(financeClientIntegration)
